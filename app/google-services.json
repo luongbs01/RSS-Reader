@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "737174498367",
+    "project_id": "rss-reader-3e232",
+    "storage_bucket": "rss-reader-3e232.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737174498367:android:d1504bc96fb81cf9cb1c8a",
+        "android_client_info": {
+          "package_name": "com.luonghm.rssreader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "737174498367-d6h6agda5dkdpm1tg2j1g6dioulkvnqo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.luonghm.rssreader",
+            "certificate_hash": "fc3920ccee4016352218f14c0b55790fca027908"
+          }
+        },
+        {
+          "client_id": "737174498367-84fbgfc0kcqlja832gkd6m59immipvrh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq3bfv75WvrWJ4My2Xk62P_Ewh-ttdt9c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737174498367-84fbgfc0kcqlja832gkd6m59immipvrh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

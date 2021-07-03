@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/newspaper_text_view"
+            android:icon="@drawable/ic_change"
+            android:title="Chọn đầu báo" />
+        <item
+            android:id="@+id/read_post"
+            android:icon="@drawable/ic_restore"
+            android:title="Tin đã đọc" />
+        <item
+            android:id="@+id/saved_post"
+            android:icon="@drawable/ic_bookmark"
+            android:title="Tin đã lưu" />
+        <item
+            android:id="@+id/review"
+            android:icon="@drawable/ic_star"
+            android:title="Đánh giá ứng dụng" />
+        <item
+            android:id="@+id/email"
+            android:icon="@drawable/ic_email"
+            android:title="Gửi email góp ý" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_settings"
+            android:title="Cài đặt chung" />
+    </group>
+</menu>
