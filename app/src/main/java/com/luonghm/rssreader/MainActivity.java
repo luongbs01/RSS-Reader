@@ -1,15 +1,5 @@
 package com.luonghm.rssreader;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.preference.PreferenceManager;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -20,17 +10,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
 import com.codemybrainsout.ratingdialog.RatingDialog;
-
-import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -58,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private int selectedTab = -1;
     private AdView mAdView;
-    private InterstitialAd mInterstitialAd;
     private int position;
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -109,45 +102,47 @@ public class MainActivity extends AppCompatActivity {
                 view.setCheckable(false);
                 drawerLayout.closeDrawers();
                 Intent intent = new Intent();
-                if (view.getItemId() != R.id.review || view.getItemId() != R.id.email) {
-                    if (mInterstitialAd != null) {
-                        mInterstitialAd.show(MainActivity.this);
-                        loadAd();
-                    }
-                }
                 switch (view.getItemId()) {
                     case R.id.account:
                         if (FirebaseAuth.getInstance().getCurrentUser() == null || FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
                             intent = new Intent(MainActivity.this, Account.class);
                         }
+                        FirebaseAnalyticsUtils.putEventClick(getApplicationContext(), FirebaseAnalyticsUtils.PARAM_SIGN_IN, "click_sign_in_button");
                         break;
                     case R.id.log_out_layout:
                         if (FirebaseAuth.getInstance().getCurrentUser() != null && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
                             intent = new Intent(MainActivity.this, Account.class);
                             intent.putExtra("SignOut", 1);
+                            FirebaseAnalyticsUtils.putEventClick(getApplicationContext(), FirebaseAnalyticsUtils.PARAM_LOG_OUT, "click_log_out_button");
                         }
                         break;
                     case R.id.newspaper_text_view:
                         intent = new Intent(MainActivity.this, NewsListActivity.class);
+                        FirebaseAnalyticsUtils.putEventClick(getApplicationContext(), FirebaseAnalyticsUtils.PARAM_ARTICLE_TYPE, "click_article_type");
                         break;
                     case R.id.read_post:
                         intent = new Intent(MainActivity.this, MainActivity3.class);
+                        FirebaseAnalyticsUtils.putEventClick(getApplicationContext(), FirebaseAnalyticsUtils.PARAM_READ_POST, "click_read_post");
                         break;
                     case R.id.saved_post:
                         intent = new Intent(MainActivity.this, MainActivity4.class);
+                        FirebaseAnalyticsUtils.putEventClick(getApplicationContext(), FirebaseAnalyticsUtils.PARAM_SAVED_POST, "click_saved_post");
                         break;
                     case R.id.review:
                         intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName()));
+                        FirebaseAnalyticsUtils.putEventClick(getApplicationContext(), FirebaseAnalyticsUtils.PARAM_REVIEW, "click_rate_app");
                         break;
                     case R.id.email:
                         intent = new Intent(Intent.ACTION_SENDTO);
                         intent.setData(Uri.parse("mailto:"));
                         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"luongbs01@gmail.com"});
                         intent.putExtra(Intent.EXTRA_SUBJECT, "Đóng góp ý kiến cho ứng dụng");
+                        FirebaseAnalyticsUtils.putEventClick(getApplicationContext(), FirebaseAnalyticsUtils.PARAM_REVIEW, "click_review");
                         break;
 
                     case R.id.settings:
                         intent = new Intent(MainActivity.this, SettingsActivity.class);
+                        FirebaseAnalyticsUtils.putEventClick(getApplicationContext(), FirebaseAnalyticsUtils.PARAM_SETTINGS, "click_settings");
                         break;
                 }
                 startActivity(intent);
@@ -200,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        loadAd();
 
         final RatingDialog ratingDialog = new RatingDialog.Builder(this)
                 .threshold(3)
@@ -220,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         mAdView = findViewById(R.id.adView);
+        //TODO: set adUnitId
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -261,10 +256,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.account:
                 if (FirebaseAuth.getInstance().getCurrentUser() == null || FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
                     intent = new Intent(this, Account.class);
-                    if (mInterstitialAd != null) {
-                        mInterstitialAd.show(this);
-                        loadAd();
-                    }
                     startActivity(intent);
                 }
                 break;
@@ -272,10 +263,6 @@ public class MainActivity extends AppCompatActivity {
                 if (FirebaseAuth.getInstance().getCurrentUser() != null && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
                     intent = new Intent(this, Account.class);
                     intent.putExtra("SignOut", 1);
-                    if (mInterstitialAd != null) {
-                        mInterstitialAd.show(this);
-                        loadAd();
-                    }
                     startActivity(intent);
                 }
                 break;
@@ -299,47 +286,6 @@ public class MainActivity extends AppCompatActivity {
             logout_text_view.setVisibility(View.VISIBLE);
             logout_image_view.setVisibility(View.VISIBLE);
         }
-    }
-
-
-    public void loadAd() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-        InterstitialAd.load(this, "ca-app-pub-4585830360225865/6591363234", adRequest, new InterstitialAdLoadCallback() {
-            @Override
-            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                super.onAdLoaded(interstitialAd);
-                mInterstitialAd = interstitialAd;
-            }
-
-            @Override
-            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                mInterstitialAd = null;
-            }
-        });
-        if (mInterstitialAd != null)
-            mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
-                @Override
-                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                    super.onAdFailedToShowFullScreenContent(adError);
-                }
-
-                @Override
-                public void onAdShowedFullScreenContent() {
-                    super.onAdShowedFullScreenContent();
-                    mInterstitialAd = null;
-                    loadAd();
-                }
-
-                @Override
-                public void onAdDismissedFullScreenContent() {
-                    super.onAdDismissedFullScreenContent();
-                }
-
-                @Override
-                public void onAdImpression() {
-                    super.onAdImpression();
-                }
-            });
     }
 }
 
